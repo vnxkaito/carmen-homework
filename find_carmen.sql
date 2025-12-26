@@ -47,7 +47,20 @@ and (select count(*)
  -- There are only two cities she could be flying to in the country. One is named the same as the country – that
  -- would be too obvious. We're following our gut on this one; find out what other city in that country she might
  --  be flying to.
-
+select co.*
+from public.city as c
+inner join public.country as co
+on c.countrycode = co.code
+inner join public.countrylanguage as cl
+on cl.countrycode = co.code
+where co.region = 'Southern Europe'
+and cl.language = 'Italian'
+and (select count(*)
+		from public.country as co2
+		inner join public.countrylanguage as cl2
+		on co2.code = cl2.countrycode
+		where co2.code = co.code) = 1
+and c.name != co.name
 
 
 -- Clue #5: Oh no, she pulled a switch – there are two cities with very similar names, but in totally different
