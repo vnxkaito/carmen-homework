@@ -28,7 +28,19 @@ limit 1;
 -- Clue #3: We have new news on the classes Carmen attended – our gumshoes tell us she's moved on
 -- to a different country, a country where people speak only the language she was learning. Find out which
 --  nearby country speaks nothing but that language.
-
+select co.*
+from public.city as c
+inner join public.country as co
+on c.countrycode = co.code
+inner join public.countrylanguage as cl
+on cl.countrycode = co.code
+where co.region = 'Southern Europe'
+and cl.language = 'Italian'
+and (select count(*)
+		from public.country as co2
+		inner join public.countrylanguage as cl2
+		on co2.code = cl2.countrycode
+		where co2.code = co.code) = 1
 
 
 -- Clue #4: We're booking the first flight out – maybe we've actually got a chance to catch her this time.
